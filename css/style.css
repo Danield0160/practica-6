@@ -1,0 +1,83 @@
+/* *{border: 1px solid black;} */
+*{
+    user-select: none;
+}
+
+#contenedor{
+    width: fit-content;
+    margin: auto;
+}
+#pantalla{
+    width: 99.5%;
+    height: 250px;
+    border: 2px solid black;
+    padding: 10px;
+}
+#textoPantalla{
+    display: inline;
+    vertical-align: top;
+    margin-right: -2px;
+}
+#cursor{
+    background-color: rgb(0, 0, 0);
+    width: 2px;
+    height: 15px;
+    display: inline-block;
+    margin: 0;
+}
+
+/*            */
+#cursor{animation: blink 1s step-start infinite;}
+@keyframes blink {50% {opacity: 0.3;}}
+/*              */
+
+#teclado{
+    width: fit-content;
+}
+
+
+.fila{
+    display: block;
+    margin: 5px;
+}
+.fila >div{
+    display:inline-block;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    border: 1px solid black;
+
+}
+.corta{
+    width: 62.5px !important;
+}
+.media{
+    width: 75px !important;
+}
+.larga{
+    width: 100px !important;
+}
+.muyLarga{
+    width: 145px !important;
+}
+.space{
+    width: 350px !important;
+}
+
+#enter{
+    width: 75px !important;
+}
+#enter >div{
+    background-color: gray;
+    height: 59px;
+    width: 48px;
+    float: right;
+    border: 1px solid black;
+    border-top: 0px solid black;
+    margin: -1px;
+
+}
+.especial{
+    background-color: gray;
+}
