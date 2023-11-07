@@ -2,13 +2,16 @@
 *{
     user-select: none;
 }
+body{
+    min-width: 950px;
+}
 
 #contenedor{
     width: fit-content;
     margin: auto;
 }
 #pantalla{
-    width: 99.5%;
+    width: 97.5%;
     height: 250px;
     border: 2px solid black;
     padding: 10px;

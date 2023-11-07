@@ -7,11 +7,17 @@ class Teclado{
     texto = ""
 
     constructor(){
+
         document.getElementById("teclado").addEventListener("click",function(e){
             if(e.target.parentElement.className == "fila"){
                 this.teclear(e.target.innerText)
             }
         }.bind(this))
+
+        document.addEventListener("keydown", function(event) {
+            event.preventDefault()
+            console.log(`Key pressed: ${event.key}`);
+        })
     }
 
     teclear(texto){
@@ -54,7 +60,7 @@ class Teclado{
 
 
 
-        
+
         return texto
     }
 
