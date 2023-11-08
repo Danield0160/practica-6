@@ -1,66 +1,69 @@
-class Teclado{
+class Teclado {
     shift = false;
     control = false;
     alt = false;
     altgr = false;
-    mayuscula= false
+    mayuscula = false
     texto = ""
 
-    constructor(){
+    constructor() {
 
-        document.getElementById("teclado").addEventListener("click",function(e){
-            if(e.target.parentElement.className == "fila"){
+        document.getElementById("teclado").addEventListener("click", function (e) {
+            if (e.target.parentElement.className == "fila") {
                 this.teclear(e.target.innerText)
             }
         }.bind(this))
 
-        document.addEventListener("keydown", function(event) {
-            event.preventDefault()
-            console.log(`Key pressed: ${event.key}`);
-        })
+        document.addEventListener("keydown", function (e) {
+            e.preventDefault()
+            this.teclear(e.key)
+        }.bind(this))
     }
 
-    teclear(texto){
-        if(texto =="Backspace"){
+    teclear(texto) {
+        if (texto == "Backspace") {
             this.borrar()
             return
-        }else if(this.esTeclaEspecial(texto)){
+        } else if (this.esTeclaEspecial(texto)) {
             this.ejecutarTeclaEspecial(texto)
-        }else{
+        } else if (this.esTeclaNormal(texto)) {
             this.escribir(texto)
         }
-        
-        
+
+
     }
 
-    borrar(){
-        if(this.texto.endsWith("<br>")){
-            this.texto = this.texto.slice(0,this.texto.length-4)
-        }else if(this.texto.endsWith("&nbsp;")){
-            this.texto = this.texto.slice(0,this.texto.length-6)
-        }else{
-            this.texto = this.texto.slice(0,this.texto.length-1)
+    borrar() {
+        if (this.texto.endsWith("<br>")) {
+            this.texto = this.texto.slice(0, this.texto.length - 4)
+        } else if (this.texto.endsWith("&nbsp;")) {
+            this.texto = this.texto.slice(0, this.texto.length - 6)
+        } else {
+            this.texto = this.texto.slice(0, this.texto.length - 1)
         }
         this.actualizar()
     }
 
-    escribir(texto){
+    escribir(texto) {
         this.texto += this.alterarTexto(texto)
         this.actualizar()
     }
 
-    esTeclaEspecial(texto){
-        if(["Tab","Caps Lock","shift","control","windows","alt","space","alt gr","fn","Enter"].includes(texto)){
+    esTeclaEspecial(texto) {
+        if (["Tab", "CapsLock", "Shift", "Control", "Meta", "Alt", " ", " ", "AltGraph", "Enter"].includes(texto)) {
+            return true
+        }
+        return false
+    }
+    esTeclaNormal(texto) {
+        if ("abcdefghijklmnñopqrstuvwxyz123456789+-*/.,<>`".includes(texto.toLowerCase())) {
             return true
         }
         return false
     }
 
-    alterarTexto(texto){
-
-
-
-
+    //TODO: alterar texto en base a los atributos 
+    alterarTexto(texto) {
         return texto
     }
 
@@ -70,31 +73,32 @@ class Teclado{
                 this.escribir("&nbsp;&nbsp;&nbsp;&nbsp;")
                 break;
 
-            case "Caps Lock":
+            case "CapsLock":
                 this.mayuscula = !this.mayuscula
                 break;
 
-            case "shift":
+            case "Shift":
                 this.shift = !this.shift
                 break;
 
-            case "control":
+            case "Control":
                 this.control = !this.control
                 break;
 
-            case "windows":
+            case "Meta":
                 this.escribir("ventana")
                 break;
 
-            case "alt":
+            case "Alt":
                 this.alt = !this.alt
                 break;
 
-            case "space":
+            case " ":
+            case " ":
                 this.escribir("&nbsp;")
                 break;
 
-            case "alt gr":
+            case "AltGraph":
                 this.altgr = !this.altgr
                 break;
 
@@ -112,10 +116,10 @@ class Teclado{
 
     }
 
-    actualizar(){
+    actualizar() {
         document.getElementById("textoPantalla").innerHTML = this.texto
     }
 }
 
 
-keyb =new Teclado();
+keyb = new Teclado();
