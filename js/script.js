@@ -5,6 +5,7 @@ class Teclado {
     altgr = false;
     mayuscula = false
     texto = ""
+    sizeFila = 103
 
     constructor() {
 
@@ -18,26 +19,35 @@ class Teclado {
             e.preventDefault()
             this.teclear(e.key)
         }.bind(this))
+
+        document.addEventListener("keyup", function (e) {
+            e.preventDefault()
+            this.ejecutarTeclaEspecial(e.key)
+        }.bind(this))
     }
 
     teclear(texto) {
         if (texto == "Backspace") {
             this.borrar()
             return
-        } else if (this.esNecesarioSaltoDeLinea()) {
-            this.ejecutarTeclaEspecial("Enter")
-        } else if (this.esTeclaEspecial(texto)) {
+        }
+        if (this.esTeclaEspecial(texto)) {
             this.ejecutarTeclaEspecial(texto)
-        } else if (this.esTeclaNormal(texto)) {
-            this.escribir(texto)
+        }
+        if (this.esNecesarioSaltoDeLinea()) {
+            this.ejecutarTeclaEspecial("Enter")
+        }
+        if (this.esTeclaNormal(texto)) {
+            this.escribir(texto.toLocaleLowerCase())
         }
 
     }
 
     esNecesarioSaltoDeLinea() {
-        let longitud = this.texto.replaceAll("&nbsp;", ".")
-        console.log(longitud, longitud.length)
-        let necesidad = ((this.texto.lastIndexOf("<br>") - longitud.length) < -107)
+        let necesidad = (this.texto.slice(this.texto.lastIndexOf("<br>")).replaceAll("&nbsp;", ".").replaceAll("<br>", "").length) > this.sizeFila
+        if (this.texto.lastIndexOf("<br>") == -1) {
+            return this.texto.replaceAll("&nbsp;", ".").length > this.sizeFila
+        }
         return necesidad
     }
 
@@ -54,6 +64,9 @@ class Teclado {
 
     escribir(texto) {
         this.texto += this.alterarTexto(texto)
+        if (this.esNecesarioSaltoDeLinea()) {
+            this.ejecutarTeclaEspecial("Enter")
+        }
         this.actualizar()
     }
 
@@ -64,21 +77,48 @@ class Teclado {
         return false
     }
     esTeclaNormal(texto) {
-        if ("abcdefghijklmnñopqrstuvwxyz123456789+-*/.,<>`".includes(texto.toLowerCase())) {
+        if (("abcdefghijklmnñopqrstuvwxyz123456789+-*/.,<>`" + '=!"·$%&/()'+"€").includes(texto.toLowerCase())) {
             return true
         }
         return false
     }
 
     //TODO: alterar texto en base a los atributos 
+    /**
+     * 
+     * @param {string} texto 
+     * @returns {String}
+     */
     alterarTexto(texto) {
+        if (this.shift) {
+            console.log(texto)
+            if (Number(texto)) {
+                return ['=', '!', '"', '·', '$', '%', '&', '/', '(', ')'][Number(texto)]
+            }
+
+            if (texto.toUpperCase() == texto) {
+                texto = texto.toLocaleLowerCase()
+            } else {
+                texto = texto.toUpperCase()
+            }
+        }
+        if(this.altgr){
+            console.log(texto)
+            if(texto = "e"){
+                return "€"
+            }
+        }
+
         return texto
     }
 
     ejecutarTeclaEspecial(texto) {
         switch (texto) {
             case "Tab":
-                this.escribir("&nbsp;&nbsp;&nbsp;&nbsp;")
+                this.escribir("&nbsp;")
+                this.escribir("&nbsp;")
+                this.escribir("&nbsp;")
+                this.escribir("&nbsp;")
                 break;
 
             case "CapsLock":
@@ -121,11 +161,19 @@ class Teclado {
             default:
                 break;
         }
+        this.actualizar()
 
     }
 
     actualizar() {
         document.getElementById("textoPantalla").innerHTML = this.texto
+        document.getElementById("debugInfo").innerHTML = `
+            shift=${this.shift}<br>
+            control=${this.control}<br>
+            alt=${this.alt}<br>
+            altgr=${this.altgr}<br>
+            mayus=${this.mayuscula}
+        `
     }
 }
 
