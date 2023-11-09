@@ -5,24 +5,36 @@ class Teclado {
     altgr = false;
     mayuscula = false
     texto = ""
-    sizeFila = 103
+    sizeFila = 20
+    teclasPresionadas = new Set()
 
     constructor() {
 
         document.getElementById("teclado").addEventListener("click", function (e) {
             if (e.target.parentElement.className == "fila") {
-                this.teclear(e.target.innerText)
+                console.log(e.target.getAttribute("code"));
+                this.teclear(e.target.getAttribute("code"))
             }
         }.bind(this))
 
         document.addEventListener("keydown", function (e) {
             e.preventDefault()
-            this.teclear(e.key)
+            if (!this.teclasPresionadas.has(e.key)) {
+                this.teclear(e.code)
+                // Las teclas especiales que estan en [...] son las unicas que pueden repetir al mantener presionadas 
+                if (this.esTeclaEspecial(e.code) && !(["Space", "Tab", "Enter"].includes(e.code))) {
+                    this.teclasPresionadas.add(e.key)
+                }
+            }
         }.bind(this))
 
         document.addEventListener("keyup", function (e) {
+            this.teclasPresionadas.delete(e.key)
             e.preventDefault()
-            this.ejecutarTeclaEspecial(e.key)
+            //hace que esas teclas al levantarse no se ejecuten, ya que se ejecuta en keydown
+            if (this.esTeclaEspecial(e.code) && !(["Space", "Tab", "Enter","MetaLeft","MetaRight"].includes(e.code))) {
+                this.ejecutarTeclaEspecial(e.code)
+            }
         }.bind(this))
     }
 
@@ -34,11 +46,8 @@ class Teclado {
         if (this.esTeclaEspecial(texto)) {
             this.ejecutarTeclaEspecial(texto)
         }
-        if (this.esNecesarioSaltoDeLinea()) {
-            this.ejecutarTeclaEspecial("Enter")
-        }
         if (this.esTeclaNormal(texto)) {
-            this.escribir(texto.toLocaleLowerCase())
+            this.escribir(texto.slice(-1).toLowerCase())
         }
 
     }
@@ -63,27 +72,40 @@ class Teclado {
     }
 
     escribir(texto) {
-        this.texto += this.alterarTexto(texto)
         if (this.esNecesarioSaltoDeLinea()) {
             this.ejecutarTeclaEspecial("Enter")
         }
+        this.texto += this.alterarTexto(texto)
         this.actualizar()
     }
 
     esTeclaEspecial(texto) {
-        if (["Tab", "CapsLock", "Shift", "Control", "Meta", "Alt", " ", " ", "AltGraph", "Enter"].includes(texto)) {
-            return true
-        }
-        return false
-    }
-    esTeclaNormal(texto) {
-        if (("abcdefghijklmnñopqrstuvwxyz123456789+-*/.,<>`" + '=!"·$%&/()'+"€").includes(texto.toLowerCase())) {
+        if (["Tab", "CapsLock", "ShiftLeft", "ControlLeft", "MetaLeft", "AltLeft", "Space", "AltRight","MetaRight", "ControlRight", "ShiftRight", "Enter"].includes(texto)) {
             return true
         }
         return false
     }
 
-    //TODO: alterar texto en base a los atributos 
+    /**
+     * 
+     * @param {String} texto 
+     * @returns {boolean}
+     */
+    esTeclaNormal(texto) {
+        if (texto.startsWith("Key")) {
+            return true
+        }
+        return false
+    }
+
+    esTeclaNumerica(texto) {
+        if (texto.startsWith("Digit")) {
+            return true
+        }
+        return false
+    }
+
+    //TODO: alterar texto en base a los atributos y los numericos
     /**
      * 
      * @param {string} texto 
@@ -91,7 +113,6 @@ class Teclado {
      */
     alterarTexto(texto) {
         if (this.shift) {
-            console.log(texto)
             if (Number(texto)) {
                 return ['=', '!', '"', '·', '$', '%', '&', '/', '(', ')'][Number(texto)]
             }
@@ -102,9 +123,8 @@ class Teclado {
                 texto = texto.toUpperCase()
             }
         }
-        if(this.altgr){
-            console.log(texto)
-            if(texto = "e"){
+        if (this.altgr) {
+            if (texto == "e") {
                 return "€"
             }
         }
@@ -125,28 +145,31 @@ class Teclado {
                 this.mayuscula = !this.mayuscula
                 break;
 
-            case "Shift":
+            case "ShiftRight":
+            case "ShiftLeft":
                 this.shift = !this.shift
                 break;
 
-            case "Control":
+            case "ControlRight":
+            case "ControlLeft":
                 this.control = !this.control
                 break;
 
-            case "Meta":
-                this.escribir("ventana")
+            case "MetaRight":
+            case "MetaLeft":
+                this.escribir("╬")
                 break;
 
-            case "Alt":
+            case "AltLeft":
                 this.alt = !this.alt
                 break;
 
-            case " ":
-            case " ":
+
+            case "Space":
                 this.escribir("&nbsp;")
                 break;
 
-            case "AltGraph":
+            case "AltRight":
                 this.altgr = !this.altgr
                 break;
 
@@ -155,7 +178,7 @@ class Teclado {
                 break;
 
             case "Enter":
-                this.escribir("<br>")
+                this.texto +="<br>"
                 break;
 
             default:
