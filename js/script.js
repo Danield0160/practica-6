@@ -24,10 +24,10 @@ class Teclado {
         if (texto == "Backspace") {
             this.borrar()
             return
+        } else if (this.esNecesarioSaltoDeLinea()) {
+            this.ejecutarTeclaEspecial("Enter")
         } else if (this.esTeclaEspecial(texto)) {
             this.ejecutarTeclaEspecial(texto)
-        } else if (this.esNecesarioSaltoDeLinea()) {
-            this.teclear("Enter")
         } else if (this.esTeclaNormal(texto)) {
             this.escribir(texto)
         }
@@ -36,6 +36,7 @@ class Teclado {
 
     esNecesarioSaltoDeLinea() {
         let longitud = this.texto.replaceAll("&nbsp;", ".")
+        console.log(longitud, longitud.length)
         let necesidad = ((this.texto.lastIndexOf("<br>") - longitud.length) < -107)
         return necesidad
     }
