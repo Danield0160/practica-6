@@ -20,6 +20,8 @@ body{
     display: inline;
     vertical-align: top;
     margin-right: -2px;
+    font-size: 1em;
+    font-family: monospace;
 }
 #cursor{
     background-color: rgb(0, 0, 0);

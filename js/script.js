@@ -24,19 +24,20 @@ class Teclado {
         if (texto == "Backspace") {
             this.borrar()
             return
-        if(this.esNecesarioSaltoDeLinea()){
-            this.teclear("Enter")
-        }
         } else if (this.esTeclaEspecial(texto)) {
             this.ejecutarTeclaEspecial(texto)
+        } else if (this.esNecesarioSaltoDeLinea()) {
+            this.teclear("Enter")
         } else if (this.esTeclaNormal(texto)) {
             this.escribir(texto)
         }
 
     }
 
-    esNecesarioSaltoDeLinea(){
-        return (this.texto.lastIndexOf("<br>") < -100)
+    esNecesarioSaltoDeLinea() {
+        let longitud = this.texto.replaceAll("&nbsp;", ".")
+        let necesidad = ((this.texto.lastIndexOf("<br>") - longitud.length) < -107)
+        return necesidad
     }
 
     borrar() {
