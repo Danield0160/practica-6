@@ -7,6 +7,7 @@ class Teclado {
     texto = ""
     sizeFila = 20
     teclasPresionadas = new Set()
+    espaciosTabulacion = 4
 
     constructor() {
 
@@ -19,6 +20,9 @@ class Teclado {
 
         document.addEventListener("keydown", function (e) {
             e.preventDefault()
+            if(e.code == "F5"){
+                window.location.reload();
+            }
             if (!this.teclasPresionadas.has(e.key)) {
                 this.teclear(e.code)
                 // Las teclas especiales que estan en [...] son las unicas que pueden repetir al mantener presionadas 
@@ -36,6 +40,8 @@ class Teclado {
                 this.ejecutarTeclaEspecial(e.code)
             }
         }.bind(this))
+
+        this.actualizar()
     }
 
     teclear(texto) {
@@ -47,7 +53,11 @@ class Teclado {
             this.ejecutarTeclaEspecial(texto)
         }
         if (this.esTeclaNormal(texto)) {
-            this.escribir(texto.slice(-1).toLowerCase())
+            this.escribir(this.alterarCaracter(texto.slice(-1).toLowerCase()))
+        }
+        if(this.esTeclaNumerica(texto)){
+            this.escribir(this.alterarNumero(texto.slice(-1).toLowerCase()))
+
         }
 
     }
@@ -75,7 +85,7 @@ class Teclado {
         if (this.esNecesarioSaltoDeLinea()) {
             this.ejecutarTeclaEspecial("Enter")
         }
-        this.texto += this.alterarTexto(texto)
+        this.texto += texto
         this.actualizar()
     }
 
@@ -111,34 +121,34 @@ class Teclado {
      * @param {string} texto 
      * @returns {String}
      */
-    alterarTexto(texto) {
+    alterarCaracter(texto) {
         if (this.shift) {
-            if (Number(texto)) {
-                return ['=', '!', '"', '·', '$', '%', '&', '/', '(', ')'][Number(texto)]
-            }
-
-            if (texto.toUpperCase() == texto) {
-                texto = texto.toLocaleLowerCase()
-            } else {
-                texto = texto.toUpperCase()
-            }
+            texto = texto.toUpperCase()
         }
         if (this.altgr) {
             if (texto == "e") {
                 return "€"
             }
+            if(texto == "E"){
+                return ""
+            }
         }
 
+        return texto
+    }
+    alterarNumero(texto){
+        if (this.shift) {
+            return ['=', '!', '"', '·', '$', '%', '&', '/', '(', ')'][Number(texto)]
+        }
         return texto
     }
 
     ejecutarTeclaEspecial(texto) {
         switch (texto) {
             case "Tab":
-                this.escribir("&nbsp;")
-                this.escribir("&nbsp;")
-                this.escribir("&nbsp;")
-                this.escribir("&nbsp;")
+                for (let index = 0; index < this.espaciosTabulacion; index++) {
+                    this.escribir("&nbsp;")
+                }
                 break;
 
             case "CapsLock":
