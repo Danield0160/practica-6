@@ -1,3 +1,4 @@
+//FIXME: caps lock error
 class Teclado {
     shift = false;
     control = false;
@@ -20,7 +21,7 @@ class Teclado {
 
         document.addEventListener("keydown", function (e) {
             e.preventDefault()
-            if(e.code == "F5"){
+            if (e.code == "F5") {
                 window.location.reload();
             }
             if (!this.teclasPresionadas.has(e.key)) {
@@ -36,7 +37,7 @@ class Teclado {
             this.teclasPresionadas.delete(e.key)
             e.preventDefault()
             //hace que esas teclas al levantarse no se ejecuten, ya que se ejecuta en keydown
-            if (this.esTeclaEspecial(e.code) && !(["Space", "Tab", "Enter","MetaLeft","MetaRight"].includes(e.code))) {
+            if (this.esTeclaEspecial(e.code) && !(["Space", "Tab", "Enter", "MetaLeft", "MetaRight"].includes(e.code))) {
                 this.ejecutarTeclaEspecial(e.code)
             }
         }.bind(this))
@@ -49,17 +50,19 @@ class Teclado {
             this.borrar()
             return
         }
-        if (this.esTeclaEspecial(texto)) {
+        else if (this.esTeclaEspecial(texto)) {
             this.ejecutarTeclaEspecial(texto)
         }
-        if (this.esTeclaNormal(texto)) {
+        else if (this.esTeclaCaracter(texto)) {
             this.escribir(this.alterarCaracter(texto.slice(-1).toLowerCase()))
         }
-        if(this.esTeclaNumerica(texto)){
-            this.escribir(this.alterarNumero(texto.slice(-1).toLowerCase()))
-
+        else if (this.esTeclaCaracterEspecial(texto)) {
+            this.escribir(this.alterarCaracterEspecial(texto))
         }
 
+        else if (this.esTeclaNumerica(texto)) {
+            this.escribir(this.alterarNumero(texto.slice(-1).toLowerCase()))
+        }
     }
 
     esNecesarioSaltoDeLinea() {
@@ -90,7 +93,7 @@ class Teclado {
     }
 
     esTeclaEspecial(texto) {
-        if (["Tab", "CapsLock", "ShiftLeft", "ControlLeft", "MetaLeft", "AltLeft", "Space", "AltRight","MetaRight", "ControlRight", "ShiftRight", "Enter"].includes(texto)) {
+        if (["Tab", "CapsLock", "ShiftLeft", "ControlLeft", "MetaLeft", "AltLeft", "Space", "AltRight", "MetaRight", "ControlRight", "ShiftRight", "Enter"].includes(texto)) {
             return true
         }
         return false
@@ -101,46 +104,76 @@ class Teclado {
      * @param {String} texto 
      * @returns {boolean}
      */
-    esTeclaNormal(texto) {
-        if (texto.startsWith("Key")) {
-            return true
-        }
-        return false
+    esTeclaCaracter(texto) {
+        return texto.startsWith("Key")
     }
 
     esTeclaNumerica(texto) {
-        if (texto.startsWith("Digit")) {
-            return true
-        }
-        return false
+        return texto.startsWith("Digit")
     }
 
-    //TODO: alterar texto en base a los atributos y los numericos
+    esTeclaCaracterEspecial(texto) {
+        return ["Backquote", "IntlBackslash", "Comma", "Period", "Slash", "Semicolon", "Quote",
+            "Backslash", "BracketLeft", "BracketRight", "Minus", "Equal"].includes(texto)
+    }
+
+    //TODO: termianr alterar texto en base a los atributos y los numericos
     /**
      * 
      * @param {string} texto 
      * @returns {String}
      */
     alterarCaracter(texto) {
-        if (this.shift) {
-            texto = texto.toUpperCase()
+        let resultado = ""
+        if (this.shift && !this.altgr && !this.alt) {
+            resultado = texto.toUpperCase()
         }
-        if (this.altgr) {
-            if (texto == "e") {
-                return "€"
-            }
-            if(texto == "E"){
-                return ""
-            }
+        else if (!this.shift && this.altgr && !this.alt) {
+            resultado = "æ”¢ð€đŋħ→ˀĸłµnøþ@¶ßŧ↓“ł»←«"[texto.toUpperCase().charCodeAt() - 65]
         }
 
-        return texto
-    }
-    alterarNumero(texto){
-        if (this.shift) {
-            return ['=', '!', '"', '·', '$', '%', '&', '/', '(', ')'][Number(texto)]
+
+
+        else if (!this.shift && !this.altgr && !this.alt) {
+            resultado = texto
         }
-        return texto
+
+        return resultado
+    }
+
+    //TODO: alterar caracter especial `+ḉ-.,
+    alterarCaracterEspecial(texto) {
+        let teclas = ["Backquote", "IntlBackslash", "Comma", "Period", "Slash", "Semicolon", "Quote",
+            "Backslash", "BracketLeft", "BracketRight", "Minus", "Equal"]
+        let resultado = ""
+        if (this.shift && !this.altgr) {
+            resultado = "ª>;:_Ñ¨Ç^*?¿"[teclas.indexOf(texto)]
+        }
+        else if (!this.shift && this.altgr) {
+            resultado = "\\|─·-~{}[]\\~"[teclas.indexOf(texto)]
+        }
+
+        else if (!this.shift && !this.altgr) {
+            resultado = "º<,.-ñ´ç`+'¡"[teclas.indexOf(texto)]
+        }
+
+        return resultado
+
+    }
+    alterarNumero(texto) {
+        let resultado = ""
+        if (this.shift && !this.altgr && !this.alt) {
+            resultado = `=!"·$%&/()`[Number(texto)]
+        }
+        else if (!this.shift && this.altgr && !this.alt) {
+            resultado = `}|@#~½¬{[]}`[Number(texto)]
+        }
+
+
+        else if (!this.shift && !this.altgr && !this.alt) {
+            resultado = texto
+        }
+        return resultado
     }
 
     ejecutarTeclaEspecial(texto) {
@@ -188,7 +221,7 @@ class Teclado {
                 break;
 
             case "Enter":
-                this.texto +="<br>"
+                this.texto += "<br>"
                 break;
 
             default:
@@ -197,6 +230,9 @@ class Teclado {
         this.actualizar()
 
     }
+
+    //TODO: alterar el texto del teclado
+
 
     actualizar() {
         document.getElementById("textoPantalla").innerHTML = this.texto
