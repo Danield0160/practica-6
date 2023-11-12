@@ -9,77 +9,77 @@
 
 <body>
     <div id="contenedor">
-
-        <div id="pantalla">
-            <div id="textoPantalla"></div>
-            <div id="cursor"></div>
+        <div id="contenedorPantalla">
+            <div id="pantalla">
+                <div id="textoPantalla"></div>
+                <div id="cursor"></div>
+            </div>
         </div>
-
         <div id="teclado">
             <div class="fila">
-                <div code="Backquote" class="especial">º</div>
-                <div code="Digit1">1</div>
-                <div code="Digit2">2</div>
-                <div code="Digit3">3</div>
-                <div code="Digit4">4</div>
-                <div code="Digit5">5</div>
-                <div code="Digit6">6</div>
-                <div code="Digit7">7</div>
-                <div code="Digit8">8</div>
-                <div code="Digit9">9</div>
-                <div code="Digit0">0</div>
-                <div code="Minus">'</div>
-                <div code="Equal">¡</div>
+                <div class="especial alternativa" code="Backquote" >º</div>
+                <div class="alternativa" code="Digit1">1</div>
+                <div class="alternativa" code="Digit2">2</div>
+                <div class="alternativa" code="Digit3">3</div>
+                <div class="alternativa" code="Digit4">4</div>
+                <div class="alternativa" code="Digit5">5</div>
+                <div class="alternativa" code="Digit6">6</div>
+                <div class="alternativa" code="Digit7">7</div>
+                <div class="alternativa" code="Digit8">8</div>
+                <div class="alternativa" code="Digit9">9</div>
+                <div class="alternativa" code="Digit0">0</div>
+                <div class="alternativa" code="Minus">'</div>
+                <div class="alternativa" code="Equal">¡</div>
                 <div code="Backspace" class="especial larga">Backspace</div>
             </div>
 
             <div class="fila">
                 <div code="Tab" class="especial media">Tab</div>
-                <div code="KeyQ">q</div>
-                <div code="KeyW">w</div>
-                <div code="KeyE">e</div>
-                <div code="KeyR">r</div>
-                <div code="KeyT">t</div>
-                <div code="KeyY">y</div>
-                <div code="KeyU">u</div>
-                <div code="KeyI">i</div>
-                <div code="KeyO">o</div>
-                <div code="KeyP">p</div>
-                <div>^</div>
-                <div>+</div>
+                <div class="alternativa" code="KeyQ">q</div>
+                <div class="alternativa" code="KeyW">w</div>
+                <div class="alternativa" code="KeyE">e</div>
+                <div class="alternativa" code="KeyR">r</div>
+                <div class="alternativa" code="KeyT">t</div>
+                <div class="alternativa" code="KeyY">y</div>
+                <div class="alternativa" code="KeyU">u</div>
+                <div class="alternativa" code="KeyI">i</div>
+                <div class="alternativa" code="KeyO">o</div>
+                <div class="alternativa" code="KeyP">p</div>
+                <div class="alternativa" code="BracketLeft">^</div>
+                <div class="alternativa" code="BracketRight">+</div>
                 <div code="Enter" id="enter" class="especial">Enter <div id="enter2"></div>
                 </div>
             </div>
 
             <div class="fila">
-                <div class="especial larga">CapsLock</div>
-                <div code="KeyA">a</div>
-                <div code="KeyS">s</div>
-                <div code="KeyD">d</div>
-                <div code="KeyF">f</div>
-                <div code="KeyG">g</div>
-                <div code="KeyH">h</div>
-                <div code="KeyJ">j</div>
-                <div code="KeyK">k</div>
-                <div code="KeyL">l</div>
-                <div code="Semicolon">ñ</div>
-                <div code="Quote">´</div>
-                <div code="Backslash">ç</div>
+                <div code="CapsLock" class="especial larga">CapsLock</div>
+                <div class="alternativa" code="KeyA">a</div>
+                <div class="alternativa" code="KeyS">s</div>
+                <div class="alternativa" code="KeyD">d</div>
+                <div class="alternativa" code="KeyF">f</div>
+                <div class="alternativa" code="KeyG">g</div>
+                <div class="alternativa" code="KeyH">h</div>
+                <div class="alternativa" code="KeyJ">j</div>
+                <div class="alternativa" code="KeyK">k</div>
+                <div class="alternativa" code="KeyL">l</div>
+                <div class="alternativa" code="Semicolon">ñ</div>
+                <div class="alternativa" code="Quote">´</div>
+                <div class="alternativa" code="Backslash">ç</div>
             </div>
 
             <div class="fila">
                 <div code="ShiftLeft" class="especial corta">Shift</div>
-                <div code="IntlBackslash">></div>
-                <div code="KeyZ">z</div>
-                <div code="KeyX">x</div>
-                <div code="KeyC">c</div>
-                <div code="KeyV">v</div>
-                <div code="KeyB">b</div>
-                <div code="KeyN">n</div>
-                <div code="KeyM">m</div>
-                <div code="Comma">,</div>
-                <div code="Period">.</div>
-                <div code="Slash">-</div>
+                <div class="alternativa" code="IntlBackslash">></div>
+                <div class="alternativa" code="KeyZ">z</div>
+                <div class="alternativa" code="KeyX">x</div>
+                <div class="alternativa" code="KeyC">c</div>
+                <div class="alternativa" code="KeyV">v</div>
+                <div class="alternativa" code="KeyB">b</div>
+                <div class="alternativa" code="KeyN">n</div>
+                <div class="alternativa" code="KeyM">m</div>
+                <div class="alternativa" code="Comma">,</div>
+                <div class="alternativa" code="Period">.</div>
+                <div class="alternativa" code="Slash">-</div>
                 <div code="ShiftRight" class="especial muyLarga">Shift</div>
             </div>
 
@@ -88,14 +88,19 @@
                 <div code="MetaLeft" class="especial corta">windows</div>
                 <div code="AltLeft" class="especial corta">Alt</div>
                 <div code="Space" class="especial space">&nbsp;</div>
-                <div code="AltRight" class="especial corta">AltGraph</div>
-                <div code="MetaRight" class="especial corta">Meta</div>
+                <div code="AltRight" class="especial corta">alt gr</div>
+                <div code="MetaRight" class="especial corta">windows</div>
                 <div code="Fn" class="especial corta">fn</div>
                 <div code="ControlRight" class="especial corta">Control</div>
             </div>
+            <div id="decorador"><div></div></div>
         </div>
-        <div id="debugInfo">asd</div>
+
+
+        <input type="checkbox" name="" id="visualizacionALternativaTecla" checked>Visualizar alternacion de teclas
+        <div id="debugInfo"></div>
     </div>
+
 
 </body>
 <script src="js/script.js"></script>

@@ -1,3 +1,19 @@
+@font-face {
+    font-family: "kongtext" ;
+    src: url(../kongtext.regular.ttf);
+}
+@font-face {
+    font-family: "Pinball" ;
+    src: url(../PinballChallengeDeluxe-ae6g.ttf);
+}
+@font-face {
+    font-family: "publicpixel" ;
+    src: url(../PublicPixel-z84yD.ttf);
+}
+
+
+
+
 /* *{border: 1px solid black;} */
 *{
     user-select: none;
@@ -9,37 +25,70 @@ body{
 #contenedor{
     width: fit-content;
     margin: auto;
+    perspective: 1000px;
+    
+}
+#contenedorPantalla{
+    margin: auto;
+    width: 939px;
+    background-color: grey;
+    padding: 10px;
+    border: 5px solid black;
+    margin-bottom: -69px;
 }
 #pantalla{
-    width: 97.5%;
-    height: 250px;
+    height: 350px;
     border: 2px solid black;
     padding: 10px;
+    background-color: green;
 }
 #textoPantalla{
     display: inline;
     vertical-align: top;
     margin-right: -2px;
-    font-size: 1em;
-    font-family: monospace;
+    font-size: 23px;
+    font-family: 'publicpixel';
+    text-shadow: 3px 3px rgb(1, 94, 1);
+    filter: (px);
 }
 #cursor{
     background-color: rgb(0, 0, 0);
     width: 2px;
-    height: 15px;
+    height: 20px;
+    vertical-align: bottom;
     display: inline-block;
     margin: 0;
 }
-
-/*            */
 #cursor{animation: blink 1s step-start infinite;}
 @keyframes blink {50% {opacity: 0.3;}}
-/*              */
 
 #teclado{
+    margin: auto;
     width: fit-content;
+    font-size: 25px;
+    font-weight: bold;
+    rotate: 1 0 0 45deg;
+    background-color: rgb(135, 147, 151);
+    padding-bottom: 10px;
+    border: 3px solid black;
+    margin-bottom: 30px;
+    padding-top: 10px ;
+}
+#decorador{
+    perspective: 1000px;
+    height: 0;
 }
 
+#decorador>div{
+    background-color: rgb(135, 147, 151);
+    border: 3px solid black;
+    height: 23px;
+    position: relative;
+    bottom: -5px;
+    left:2px;
+    width: 99%;
+    rotate: 1 0 0 -45deg;
+}
 
 .fila{
     display: block;
@@ -47,42 +96,93 @@ body{
 }
 .fila >div{
     display:inline-block;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     text-align: center;
-    line-height: 50px;
+    line-height: 60px;
     border: 1px solid black;
-
+    border-bottom: 10px solid black ;
+    border-left: 3px solid black;
+    border-right: 5px solid black;
+    background-color: white;
+}
+.fila>div:active{
+    background-color: grey;
+    border: 10px solid black;
+    border-bottom: 1px solid black ;
+    border-left: 3px solid black;
+    border-right: 5px solid black;
+    vertical-align: bottom;
 }
 .corta{
-    width: 62.5px !important;
+    width: 79px !important;
 }
 .media{
-    width: 75px !important;
+    width: 90px !important;
 }
 .larga{
-    width: 100px !important;
+    width: 120px !important;
 }
 .muyLarga{
-    width: 145px !important;
+    width: 173px !important;
 }
 .space{
-    width: 350px !important;
+    width: 420px !important;
 }
 
 #enter{
-    width: 75px !important;
+    width: 90px !important;
 }
 #enter >div{
     background-color: gray;
-    height: 59px;
-    width: 48px;
+    height: 75px;
+    width: 60px;
     float: right;
     border: 1px solid black;
     border-top: 0px solid black;
-    margin: -1px;
+    margin: -5px;
+    margin-top: 0px;
 
+    border-top: 0px;
+    border-bottom: 10px solid black ;
+    border-left: 3px solid black;
+    border-right: 5px solid black;
+}
+#enter>div:active{
+    border-bottom: 1px solid black ;
+    border-left: 3px solid black;
+    border-right: 5px solid black;
 }
 .especial{
-    background-color: gray;
+    background-color: gray !important;
+    font-size: 20px !important;
+}
+.especial:Active, .especial:active>div{
+    background-color: rgb(63, 63, 63) !important;
+}
+@media (max-width: 1280px){
+    #teclado{
+        width: 95%;
+    }
+    .fila>div{
+        width: 55px;
+    }
+    .corta{
+        width: 79px !important;
+    }
+    .media{
+        width: 90px !important;
+    }
+    #enter{
+        width: 98px !important;
+    }
+    .larga{
+        width: 132px !important;
+    }
+    .muyLarga{
+        width: 177px !important;
+    }
+    .space{
+        width: 380px !important;
+    }
 }

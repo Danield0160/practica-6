@@ -1,12 +1,11 @@
-//FIXME: caps lock error
 class Teclado {
     shift = false;
     control = false;
-    alt = false;
+    // alt = false;
     altgr = false;
     mayuscula = false
     texto = ""
-    sizeFila = 20
+    sizeFila = 45
     teclasPresionadas = new Set()
     espaciosTabulacion = 4
 
@@ -36,6 +35,9 @@ class Teclado {
         document.addEventListener("keyup", function (e) {
             this.teclasPresionadas.delete(e.key)
             e.preventDefault()
+            if (e.code == "CapsLock") {
+                return
+            }
             //hace que esas teclas al levantarse no se ejecuten, ya que se ejecuta en keydown
             if (this.esTeclaEspecial(e.code) && !(["Space", "Tab", "Enter", "MetaLeft", "MetaRight"].includes(e.code))) {
                 this.ejecutarTeclaEspecial(e.code)
@@ -66,11 +68,18 @@ class Teclado {
     }
 
     esNecesarioSaltoDeLinea() {
-        let necesidad = (this.texto.slice(this.texto.lastIndexOf("<br>")).replaceAll("&nbsp;", ".").replaceAll("<br>", "").length) > this.sizeFila
-        if (this.texto.lastIndexOf("<br>") == -1) {
-            return this.texto.replaceAll("&nbsp;", ".").length > this.sizeFila
+        let ultimaLinea = this.texto
+        if (this.texto.includes("<br>")) {
+            ultimaLinea = (this.texto.slice(this.texto.lastIndexOf("<br>")))
         }
-        return necesidad
+        let size = ultimaLinea.replaceAll("&nbsp;", ".")
+            .replaceAll("<br>", "")
+            .replaceAll("&gt;", ".")
+            .replaceAll("&lt;", ".")
+            .length
+
+
+        return size > this.sizeFila
     }
 
     borrar() {
@@ -78,7 +87,11 @@ class Teclado {
             this.texto = this.texto.slice(0, this.texto.length - 4)
         } else if (this.texto.endsWith("&nbsp;")) {
             this.texto = this.texto.slice(0, this.texto.length - 6)
-        } else {
+        } else if (this.texto.endsWith("&gt;") || this.texto.endsWith("&lt;")) {
+            this.texto = this.texto.slice(0, this.texto.length - 4)
+        }
+
+        else {
             this.texto = this.texto.slice(0, this.texto.length - 1)
         }
         this.actualizar()
@@ -117,7 +130,6 @@ class Teclado {
             "Backslash", "BracketLeft", "BracketRight", "Minus", "Equal"].includes(texto)
     }
 
-    //TODO: termianr alterar texto en base a los atributos y los numericos
     /**
      * 
      * @param {string} texto 
@@ -125,18 +137,16 @@ class Teclado {
      */
     alterarCaracter(texto) {
         let resultado = ""
-        if (this.shift && !this.altgr && !this.alt) {
+        if (((this.shift && !this.mayuscula) || (!this.shift && this.mayuscula)) && !this.altgr /*&& !this.alt*/) {
             resultado = texto.toUpperCase()
         }
-        else if (!this.shift && this.altgr && !this.alt) {
-            resultado = "æ”¢ð€đŋħ→ˀĸłµnøþ@¶ßŧ↓“ł»←«"[texto.toUpperCase().charCodeAt() - 65]
+        else if (!this.shift && this.altgr /*&& !this.alt*/) {
+            resultado = "æ”¢ð€đŋħ→ˀĸłµnøþ@¶ßŧ↓“ł»←«"[texto.toUpperCase().charCodeAt() - 65] || "&nbsp;"
         }
-
-
-
-        else if (!this.shift && !this.altgr && !this.alt) {
+        else if ((!this.shift && !this.mayuscula) || (this.shift && this.mayuscula) && !this.altgr /*&& !this.alt*/) {
             resultado = texto
         }
+
 
         return resultado
     }
@@ -146,7 +156,18 @@ class Teclado {
         let teclas = ["Backquote", "IntlBackslash", "Comma", "Period", "Slash", "Semicolon", "Quote",
             "Backslash", "BracketLeft", "BracketRight", "Minus", "Equal"]
         let resultado = ""
+
+        if (["Semicolon", "Backslash"].includes(texto)) {
+            if (!this.altgr) {
+                return this.alterarCaracter(texto == "Semicolon" ? "ñ" : "ç")
+            }
+        }
+
+
         if (this.shift && !this.altgr) {
+            if (texto == "IntlBackslash") {
+                return "&gt;"
+            }
             resultado = "ª>;:_Ñ¨Ç^*?¿"[teclas.indexOf(texto)]
         }
         else if (!this.shift && this.altgr) {
@@ -154,23 +175,27 @@ class Teclado {
         }
 
         else if (!this.shift && !this.altgr) {
-            resultado = "º<,.-ñ´ç`+'¡"[teclas.indexOf(texto)]
+            if (texto == "IntlBackslash") {
+                return "&lt;"
+            }
+            resultado = "º\<,.-ñ´ç`+'¡"[teclas.indexOf(texto)]
         }
+
 
         return resultado
 
     }
     alterarNumero(texto) {
         let resultado = ""
-        if (this.shift && !this.altgr && !this.alt) {
+        if (this.shift && !this.altgr /*&& !this.alt*/) {
             resultado = `=!"·$%&/()`[Number(texto)]
         }
-        else if (!this.shift && this.altgr && !this.alt) {
+        else if (!this.shift && this.altgr /*&& !this.alt*/) {
             resultado = `}|@#~½¬{[]}`[Number(texto)]
         }
 
 
-        else if (!this.shift && !this.altgr && !this.alt) {
+        else if (!this.shift && !this.altgr /*&& !this.alt*/) {
             resultado = texto
         }
         return resultado
@@ -203,9 +228,9 @@ class Teclado {
                 this.escribir("╬")
                 break;
 
-            case "AltLeft":
-                this.alt = !this.alt
-                break;
+            // case "AltLeft":
+            //     this.alt = !this.alt
+            //     break;
 
 
             case "Space":
@@ -231,7 +256,6 @@ class Teclado {
 
     }
 
-    //TODO: alterar el texto del teclado
 
 
     actualizar() {
@@ -239,10 +263,26 @@ class Teclado {
         document.getElementById("debugInfo").innerHTML = `
             shift=${this.shift}<br>
             control=${this.control}<br>
-            alt=${this.alt}<br>
             altgr=${this.altgr}<br>
-            mayus=${this.mayuscula}
-        `
+            mayus=${this.mayuscula}`
+        // + `<br>alt=${this.alt}`
+        if (document.getElementById("visualizacionALternativaTecla").checked) {
+            this.alterarTeclado()
+        }
+    }
+
+    alterarTeclado() {
+        [...document.getElementsByClassName("alternativa")].forEach(function (elemento) {
+            if (this.esTeclaNumerica(elemento.getAttribute("code"))) {
+                elemento.innerHTML = this.alterarNumero(elemento.getAttribute("code").slice(-1)) || "&nbsp;"
+            }
+            else if (this.esTeclaCaracterEspecial(elemento.getAttribute("code"))) {
+                elemento.innerHTML = this.alterarCaracterEspecial(elemento.getAttribute("code")) || "&nbsp;"
+            }
+            else if (this.esTeclaCaracter(elemento.getAttribute("code"))) {
+                elemento.innerHTML = this.alterarCaracter(elemento.getAttribute("code").slice(-1).toLowerCase()) || "&nbsp;"
+            }
+        }.bind(this))
     }
 }
 
