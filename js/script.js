@@ -5,7 +5,7 @@ class Teclado {
     altgr = false;
     mayuscula = false
     texto = ""
-    sizeFila = 45
+    sizeFila = 38
     teclasPresionadas = new Set()
     espaciosTabulacion = 4
 
@@ -20,6 +20,9 @@ class Teclado {
 
         document.addEventListener("keydown", function (e) {
             e.preventDefault()
+
+            document.querySelector(`[code="${e.code}"]`).classList.add("activado")
+
             if (e.code == "F5") {
                 window.location.reload();
             }
@@ -35,6 +38,10 @@ class Teclado {
         document.addEventListener("keyup", function (e) {
             this.teclasPresionadas.delete(e.key)
             e.preventDefault()
+
+            document.querySelector(`[code="${e.code}"]`).classList.remove("activado")
+
+
             if (e.code == "CapsLock") {
                 return
             }
@@ -99,8 +106,19 @@ class Teclado {
 
     escribir(texto) {
         if (this.esNecesarioSaltoDeLinea()) {
-            this.ejecutarTeclaEspecial("Enter")
+            this.texto += "<br>"
         }
+        if ([...this.texto.matchAll("<br>")].length > 13 || ([...this.texto.matchAll("<br>")].length > 12  && texto == "<br>") ) {
+            if(this.texto.endsWith("<br>") && [...this.texto.matchAll("<br>")].length > 13){
+                this.borrar()
+            }
+            if(texto=="<br>"){
+                return
+            }
+
+            return
+        }
+        
         this.texto += texto
         this.actualizar()
     }
@@ -246,7 +264,7 @@ class Teclado {
                 break;
 
             case "Enter":
-                this.texto += "<br>"
+                this.escribir("<br>")
                 break;
 
             default:
