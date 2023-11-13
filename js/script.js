@@ -11,10 +11,16 @@ class Teclado {
 
     constructor() {
 
-        document.getElementById("teclado").addEventListener("click", function (e) {
+        document.getElementById("teclado").addEventListener("mousedown", function (e) {
             if (e.target.parentElement.className == "fila") {
-                console.log(e.target.getAttribute("code"));
                 this.teclear(e.target.getAttribute("code"))
+            }
+        }.bind(this))
+        document.getElementById("teclado").addEventListener("mouseup", function (e) {
+            if (e.target.parentElement.className == "fila") {
+                if(this.esTeclaEspecial(e.target.getAttribute("code")) && !["ShiftRight","CapsLock"].includes(e.target.getAttribute("code"))){
+                    this.teclear(e.target.getAttribute("code"))
+                }
             }
         }.bind(this))
 
