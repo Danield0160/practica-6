@@ -26,7 +26,7 @@ body{
     width: fit-content;
     margin: auto;
     perspective: 1000px;
-    
+    margin-top: 150px;
 }
 #contenedorPantalla{
     margin: auto;
@@ -46,27 +46,36 @@ body{
 }
 #decoradorPantalla1{
     background-color: rgb(0, 0, 0);
-    width: 970px;
+    width: 968px;
     margin-left: -15px;
     height: 40px;
-    rotate: 1 0 0 80deg;
+    rotate: 1 0 0 65deg;
     position: absolute;
     top: -30px;
-    transform: translate3d(1px,-20px,-10px);
+    transform: translate3d(1px,-18px,-5px);
     transform-style: preserve-3d;
 
 }
 #decoradorPantalla2{
-    background-image: linear-gradient(grey, rgb(189, 189, 189));
-    width: 960px;
-    height: 350px;
-    rotate: 1 0 0 -75deg;
+    width: 963px;
+    height: 370px;
+    rotate: 1 0 0 -66deg;
     position:absolute;
     bottom: 0;
     backface-visibility: visible;
-    transform: translate3d(1px,215px,137px);
+    transform: translate3d(0px,248px,136px);
     border: 3px solid black;
-
+    background-image: url(../Pear_Blue_Logo.png),linear-gradient(grey, rgb(189, 189, 189));;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+span{
+    border-radius: 55%;
+    background-color: black;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin-left: 35%;
 }
 #pantalla{
     height: 310px;
@@ -77,7 +86,7 @@ body{
     backface-visibility: hidden;
 }
 body:hover #contenedorPantalla{
-    rotate: 1 0 0 0deg;
+    /* rotate: 1 0 0 0deg; */
     transition: all 1s linear;
 }
 #textoPantalla{
@@ -229,4 +238,8 @@ body:hover #contenedorPantalla{
     .space{
         width: 380px !important;
     }
+}
+#visualizacionALternativaTecla{
+width: 11px;
+height: 11px;
 }

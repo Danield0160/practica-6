@@ -8,10 +8,10 @@ class Teclado {
     sizeFila = 38
     teclasPresionadas = new Set()
     espaciosTabulacion = 4
-    nlineas= 12
+    nlineas = 12
 
     constructor() {
-
+        //TODO: hacer left alt como alt gr alternante
         document.getElementById("teclado").addEventListener("mousedown", function (e) {
             if (e.target.parentElement.className == "fila") {
                 this.teclear(e.target.getAttribute("code"))
@@ -19,7 +19,7 @@ class Teclado {
         }.bind(this))
         document.getElementById("teclado").addEventListener("mouseup", function (e) {
             if (e.target.parentElement.className == "fila") {
-                if(this.esTeclaEspecial(e.target.getAttribute("code")) && !["ShiftRight","CapsLock"].includes(e.target.getAttribute("code"))){
+                if (this.esTeclaEspecial(e.target.getAttribute("code")) && !["ShiftRight", "CapsLock"].includes(e.target.getAttribute("code"))) {
                     this.teclear(e.target.getAttribute("code"))
                 }
             }
@@ -47,9 +47,9 @@ class Teclado {
             e.preventDefault()
 
             document.querySelector(`[code="${e.code}"]`).classList.remove("activado")
+            console.log(e.code)
 
-
-            if (e.code == "CapsLock") {
+            if (["ShiftRight","CapsLock"].includes(e.code)) {
                 return
             }
             //hace que esas teclas al levantarse no se ejecuten, ya que se ejecuta en keydown
@@ -115,17 +115,17 @@ class Teclado {
         if (this.esNecesarioSaltoDeLinea()) {
             this.texto += "<br>"
         }
-        if ([...this.texto.matchAll("<br>")].length > this.nlineas || ([...this.texto.matchAll("<br>")].length > this.nlineas-1  && texto == "<br>") ) {
-            if(this.texto.endsWith("<br>") && [...this.texto.matchAll("<br>")].length > 13){
+        if ([...this.texto.matchAll("<br>")].length > this.nlineas || ([...this.texto.matchAll("<br>")].length > this.nlineas - 1 && texto == "<br>")) {
+            if (this.texto.endsWith("<br>") && [...this.texto.matchAll("<br>")].length > 13) {
                 this.borrar()
             }
-            if(texto=="<br>"){
+            if (texto == "<br>") {
                 return
             }
 
             return
         }
-        
+
         this.texto += texto
         this.actualizar()
     }
@@ -313,3 +313,15 @@ class Teclado {
 
 
 keyb = new Teclado();
+var cerrado = true
+document.getElementById("contenedorPantalla").addEventListener("click", function (e) {
+    if(e.target.tagName == "INPUT"){
+        return
+    }
+    if (cerrado) {
+        document.getElementById("contenedorPantalla").style.transform = `rotateX(${135}deg)`
+    } else {
+        document.getElementById("contenedorPantalla").style.transform = `rotateX(${0}deg)`
+    }
+    cerrado = !cerrado
+})
