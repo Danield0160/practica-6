@@ -8,6 +8,7 @@ class Teclado {
     sizeFila = 38
     teclasPresionadas = new Set()
     espaciosTabulacion = 4
+    nlineas= 12
 
     constructor() {
 
@@ -114,7 +115,7 @@ class Teclado {
         if (this.esNecesarioSaltoDeLinea()) {
             this.texto += "<br>"
         }
-        if ([...this.texto.matchAll("<br>")].length > 13 || ([...this.texto.matchAll("<br>")].length > 12  && texto == "<br>") ) {
+        if ([...this.texto.matchAll("<br>")].length > this.nlineas || ([...this.texto.matchAll("<br>")].length > this.nlineas-1  && texto == "<br>") ) {
             if(this.texto.endsWith("<br>") && [...this.texto.matchAll("<br>")].length > 13){
                 this.borrar()
             }
