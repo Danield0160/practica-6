@@ -13,13 +13,14 @@ class Teclado {
     constructor() {
         //TODO: hacer left alt como alt gr alternante
         document.getElementById("teclado").addEventListener("mousedown", function (e) {
-            if (e.target.parentElement.className == "fila") {
+            if (e.target.parentElement.className == "fila" || e.target.parentElement.id == "enter") {
+                console.log(e.target)
                 this.teclear(e.target.getAttribute("code"))
             }
         }.bind(this))
         document.getElementById("teclado").addEventListener("mouseup", function (e) {
             if (e.target.parentElement.className == "fila") {
-                if (this.esTeclaEspecial(e.target.getAttribute("code")) && !["ShiftRight", "CapsLock"].includes(e.target.getAttribute("code"))) {
+                if (this.esTeclaEspecial(e.target.getAttribute("code")) && !["ShiftRight", "CapsLock", "Enter"].includes(e.target.getAttribute("code"))) {
                     this.teclear(e.target.getAttribute("code"))
                 }
             }
@@ -30,9 +31,6 @@ class Teclado {
 
             document.querySelector(`[code="${e.code}"]`).classList.add("activado")
 
-            if (e.code == "F5") {
-                window.location.reload();
-            }
             if (!this.teclasPresionadas.has(e.code)) {
                 this.teclear(e.code)
                 // Las teclas especiales que estan en [...] son las unicas que pueden repetir al mantener presionadas 
@@ -44,11 +42,14 @@ class Teclado {
 
         document.addEventListener("keyup", function (e) {
             e.preventDefault()
+            if (e.code == "F5") {
+                window.location.reload();
+            }
             this.teclasPresionadas.delete(e.code)
 
             document.querySelector(`[code="${e.code}"]`).classList.remove("activado")
 
-            if (["ShiftRight","CapsLock"].includes(e.code)) {
+            if (["ShiftRight", "CapsLock"].includes(e.code)) {
                 return
             }
             //hace que esas teclas al levantarse no se ejecuten, ya que se ejecuta en keydown
@@ -111,7 +112,10 @@ class Teclado {
     }
 
     escribir(texto) {
-        if (this.esNecesarioSaltoDeLinea()) {
+        if (this.esNecesarioSaltoDeLinea() && texto != "<br>") {
+            if([...this.texto.matchAll("<br>")].length > this.nlineas-1){
+                return
+            }
             this.texto += "<br>"
         }
         if ([...this.texto.matchAll("<br>")].length > this.nlineas || ([...this.texto.matchAll("<br>")].length > this.nlineas - 1 && texto == "<br>")) {
@@ -121,11 +125,9 @@ class Teclado {
             if (texto == "<br>") {
                 return
             }
-
-            return
+        }else{
+            this.texto += texto
         }
-
-        this.texto += texto
         this.actualizar()
     }
 
@@ -312,9 +314,10 @@ class Teclado {
 
 
 keyb = new Teclado();
-var cerrado = true
+
+var cerrado = false
 document.getElementById("contenedorPantalla").addEventListener("click", function (e) {
-    if(e.target.tagName == "INPUT"){
+    if (e.target.tagName == "INPUT") {
         return
     }
     if (cerrado) {
@@ -324,3 +327,4 @@ document.getElementById("contenedorPantalla").addEventListener("click", function
     }
     cerrado = !cerrado
 })
+setTimeout(function () { document.getElementById("contenedorPantalla").style.transform = `rotateX(${135}deg)` }, 100)
