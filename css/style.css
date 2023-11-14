@@ -1,12 +1,4 @@
 @font-face {
-    font-family: "kongtext" ;
-    src: url(../kongtext.regular.ttf);
-}
-@font-face {
-    font-family: "Pinball" ;
-    src: url(../PinballChallengeDeluxe-ae6g.ttf);
-}
-@font-face {
     font-family: "publicpixel" ;
     src: url(../PublicPixel-z84yD.ttf);
 }
@@ -19,7 +11,7 @@
     user-select: none;
 }
 body{
-    min-width: 950px;
+    min-width: 1120px;
 }
 
 #contenedor{
@@ -46,7 +38,7 @@ body{
     transition: all 1s linear;
     font-size: x-small;
 }
-#decoradorPantalla1{
+#marcoPantalla3d{
     background-color: rgb(0, 0, 0);
     width: 968px;
     margin-left: -15px;
@@ -58,7 +50,7 @@ body{
     transform-style: preserve-3d;
 
 }
-#decoradorPantalla2{
+#pantallaDetras{
     width: 963px;
     height: 370px;
     rotate: 1 0 0 -66deg;
@@ -77,7 +69,7 @@ span{
     width: 10px;
     height: 10px;
     display: inline-block;
-    margin-left: 35%;
+    margin-left: 40%;
 }
 #pantalla{
     height: 310px;
@@ -197,7 +189,7 @@ body:hover #contenedorPantalla{
     border-left: 3px solid black;
     border-right: 5px solid black;
 }
-#enter:active>div{
+#enter:active>div, #enter.activado>div{
     border-bottom: 1px solid black ;
     border-left: 3px solid black;
     border-right: 5px solid black;
@@ -206,41 +198,10 @@ body:hover #contenedorPantalla{
     background-color: gray !important;
     font-size: 20px !important;
 }
-.especial:Active, .especial:active>div{
+.especial:Active, .especial:active>div, .especial.activado, .especial.activado>div{
     background-color: rgb(63, 63, 63) !important;
 }
-@media (max-width: 1280px){
-    #contenedorPantalla{
-        width: 900px;
-    }
-    #textoPantalla{
-        font-size: 22.2px;
-    }
-    #teclado{
-        width: 1060px;
-    }
-    .fila>div{
-        width: 55px;
-    }
-    .corta{
-        width: 79px !important;
-    }
-    .media{
-        width: 90px !important;
-    }
-    #enter{
-        width: 98px !important;
-    }
-    .larga{
-        width: 132px !important;
-    }
-    .muyLarga{
-        width: 177px !important;
-    }
-    .space{
-        width: 380px !important;
-    }
-}
+
 #visualizacionALternativaTecla{
 width: 11px;
 height: 11px;

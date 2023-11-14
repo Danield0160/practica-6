@@ -20,7 +20,7 @@ class Teclado {
         }.bind(this))
         document.getElementById("teclado").addEventListener("mouseup", function (e) {
             if (e.target.parentElement.className == "fila") {
-                if (this.esTeclaEspecial(e.target.getAttribute("code")) && !["ShiftRight", "CapsLock", "Enter"].includes(e.target.getAttribute("code"))) {
+                if (this.esTeclaEspecial(e.target.getAttribute("code")) && !["ShiftRight", "CapsLock", "Enter", "AltLeft"].includes(e.target.getAttribute("code"))) {
                     this.teclear(e.target.getAttribute("code"))
                 }
             }
@@ -28,7 +28,9 @@ class Teclado {
 
         document.addEventListener("keydown", function (e) {
             e.preventDefault()
-
+            if (e.code.startsWith("F")) {
+                return
+            }
             document.querySelector(`[code="${e.code}"]`).classList.add("activado")
 
             if (!this.teclasPresionadas.has(e.code)) {
@@ -42,18 +44,18 @@ class Teclado {
 
         document.addEventListener("keyup", function (e) {
             e.preventDefault()
-            if (e.code == "F5") {
-                window.location.reload();
+            if (e.code.startsWith("F")) {
+                return
             }
             this.teclasPresionadas.delete(e.code)
 
-            document.querySelector(`[code="${e.code}"]`).classList.remove("activado")
+            document.querySelector(`[code="${e.code}"]`).classList.remove("activado") 
 
             if (["ShiftRight", "CapsLock"].includes(e.code)) {
                 return
             }
             //hace que esas teclas al levantarse no se ejecuten, ya que se ejecuta en keydown
-            if (this.esTeclaEspecial(e.code) && !(["Space", "Tab", "Enter", "MetaLeft", "MetaRight"].includes(e.code))) {
+            if (this.esTeclaEspecial(e.code) && !(["Space", "Tab", "Enter", "MetaLeft", "MetaRight", "AltLeft"].includes(e.code))) {
                 this.ejecutarTeclaEspecial(e.code)
             }
         }.bind(this))
@@ -113,7 +115,7 @@ class Teclado {
 
     escribir(texto) {
         if (this.esNecesarioSaltoDeLinea() && texto != "<br>") {
-            if([...this.texto.matchAll("<br>")].length > this.nlineas-1){
+            if ([...this.texto.matchAll("<br>")].length > this.nlineas - 1) {
                 return
             }
             this.texto += "<br>"
@@ -125,7 +127,7 @@ class Teclado {
             if (texto == "<br>") {
                 return
             }
-        }else{
+        } else {
             this.texto += texto
         }
         this.actualizar()
@@ -138,11 +140,6 @@ class Teclado {
         return false
     }
 
-    /**
-     * 
-     * @param {String} texto 
-     * @returns {boolean}
-     */
     esTeclaCaracter(texto) {
         return texto.startsWith("Key")
     }
@@ -156,11 +153,6 @@ class Teclado {
             "Backslash", "BracketLeft", "BracketRight", "Minus", "Equal"].includes(texto)
     }
 
-    /**
-     * 
-     * @param {string} texto 
-     * @returns {String}
-     */
     alterarCaracter(texto) {
         let resultado = ""
         if (((this.shift && !this.mayuscula) || (!this.shift && this.mayuscula)) && !this.altgr /*&& !this.alt*/) {
@@ -254,9 +246,9 @@ class Teclado {
                 this.escribir("╬")
                 break;
 
-            // case "AltLeft":
-            //     this.alt = !this.alt
-            //     break;
+            case "AltLeft":
+                this.altgr = !this.altgr
+                break;
 
 
             case "Space":
