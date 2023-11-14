@@ -5,13 +5,16 @@ class Teclado {
     altgr = false;
     mayuscula = false
     texto = ""
-    sizeFila = 38
+    tamanhoFila = 38 //cuantos caracteres puede tener una fila
+    // el set de abajo son teclas especiales que han recibido un keydown, y que no se quiere que mientras esten presionadas ejecuten el keydown todo el rato    
     teclasPresionadas = new Set()
     espaciosTabulacion = 4
-    nlineas = 12
+    numeroDeLineas = 12
 
+    /**
+     * Inicia la escucha de eventos de click y de teclado
+     */
     constructor() {
-        //TODO: hacer left alt como alt gr alternante
         document.getElementById("teclado").addEventListener("mousedown", function (e) {
             if (e.target.parentElement.className == "fila" || e.target.parentElement.id == "enter") {
                 console.log(e.target)
@@ -20,6 +23,7 @@ class Teclado {
         }.bind(this))
         document.getElementById("teclado").addEventListener("mouseup", function (e) {
             if (e.target.parentElement.className == "fila") {
+                // Las teclas especiales que estan en [...] son las unicas que al levantar el click no se ejecutan (Para crear teclas alternantes)
                 if (this.esTeclaEspecial(e.target.getAttribute("code")) && !["ShiftRight", "CapsLock", "Enter", "AltLeft"].includes(e.target.getAttribute("code"))) {
                     this.teclear(e.target.getAttribute("code"))
                 }
@@ -49,7 +53,7 @@ class Teclado {
             }
             this.teclasPresionadas.delete(e.code)
 
-            document.querySelector(`[code="${e.code}"]`).classList.remove("activado") 
+            document.querySelector(`[code="${e.code}"]`).classList.remove("activado")
 
             if (["ShiftRight", "CapsLock"].includes(e.code)) {
                 return
@@ -63,6 +67,10 @@ class Teclado {
         this.actualizar()
     }
 
+    /**
+     * recoge la entrada de la escucha y la redirige segun el e.code
+     * @param {String} texto e.code 
+     */
     teclear(texto) {
         if (texto == "Backspace") {
             this.borrar()
@@ -77,12 +85,15 @@ class Teclado {
         else if (this.esTeclaCaracterEspecial(texto)) {
             this.escribir(this.alterarCaracterEspecial(texto))
         }
-
         else if (this.esTeclaNumerica(texto)) {
             this.escribir(this.alterarNumero(texto.slice(-1).toLowerCase()))
         }
     }
 
+    /**
+     * Calcula si es necesario un salto de linea en base los caracters de la ultima linea y el this.tamanhoFila
+     * @returns {Boolean} True si es necesario un salto de linea
+     */
     esNecesarioSaltoDeLinea() {
         let ultimaLinea = this.texto
         if (this.texto.includes("<br>")) {
@@ -95,9 +106,12 @@ class Teclado {
             .length
 
 
-        return size > this.sizeFila
+        return size > this.tamanhoFila
     }
 
+    /**
+     * Borra el ultimo caracter
+     */
     borrar() {
         if (this.texto.endsWith("<br>")) {
             this.texto = this.texto.slice(0, this.texto.length - 4)
@@ -113,14 +127,18 @@ class Teclado {
         this.actualizar()
     }
 
+    /**
+     * Comprueba que se pueda escribir mas y agrega el texto a escribir al this.texto 
+     * @param {String} texto texto a escribir
+     */
     escribir(texto) {
         if (this.esNecesarioSaltoDeLinea() && texto != "<br>") {
-            if ([...this.texto.matchAll("<br>")].length > this.nlineas - 1) {
+            if ([...this.texto.matchAll("<br>")].length > this.numeroDeLineas - 1) {
                 return
             }
             this.texto += "<br>"
         }
-        if ([...this.texto.matchAll("<br>")].length > this.nlineas || ([...this.texto.matchAll("<br>")].length > this.nlineas - 1 && texto == "<br>")) {
+        if ([...this.texto.matchAll("<br>")].length > this.numeroDeLineas || ([...this.texto.matchAll("<br>")].length > this.numeroDeLineas - 1 && texto == "<br>")) {
             if (this.texto.endsWith("<br>") && [...this.texto.matchAll("<br>")].length > 13) {
                 this.borrar()
             }
@@ -133,6 +151,11 @@ class Teclado {
         this.actualizar()
     }
 
+    /**
+     * comprueba si es una tecla especial
+     * @param {String} texto e.code
+     * @returns {Boolean}
+     */
     esTeclaEspecial(texto) {
         if (["Tab", "CapsLock", "ShiftLeft", "ControlLeft", "MetaLeft", "AltLeft", "Space", "AltRight", "MetaRight", "ControlRight", "ShiftRight", "Enter"].includes(texto)) {
             return true
@@ -140,19 +163,39 @@ class Teclado {
         return false
     }
 
+    /**
+     * comprueba si es una tecla normal
+     * @param {String} texto e.code
+     * @returns {Boolean}
+     */
     esTeclaCaracter(texto) {
         return texto.startsWith("Key")
     }
 
+    /**
+     * comprueba si es una tecla numercia
+     * @param {String} texto e.code
+     * @returns {Boolean}
+     */
     esTeclaNumerica(texto) {
         return texto.startsWith("Digit")
     }
 
+    /**
+     * comprueba si es una tecla de caracteres especiales
+     * @param {String} texto e.code
+     * @returns {Boolean}
+     */
     esTeclaCaracterEspecial(texto) {
         return ["Backquote", "IntlBackslash", "Comma", "Period", "Slash", "Semicolon", "Quote",
             "Backslash", "BracketLeft", "BracketRight", "Minus", "Equal"].includes(texto)
     }
 
+    /**
+     * Modifica el caracter pasado como parametro en base a las teclas activadas
+     * @param {String} texto caracter
+     * @returns {String} caracter modificado
+     */
     alterarCaracter(texto) {
         let resultado = ""
         if (((this.shift && !this.mayuscula) || (!this.shift && this.mayuscula)) && !this.altgr /*&& !this.alt*/) {
@@ -169,7 +212,11 @@ class Teclado {
         return resultado
     }
 
-    //TODO: alterar caracter especial `+ḉ-.,
+    /**
+     * Modifica el caracter especial pasado como parametro en base a las teclas activadas
+     * @param {String} texto caracter
+     * @returns {String} caracter modificado
+     */
     alterarCaracterEspecial(texto) {
         let teclas = ["Backquote", "IntlBackslash", "Comma", "Period", "Slash", "Semicolon", "Quote",
             "Backslash", "BracketLeft", "BracketRight", "Minus", "Equal"]
@@ -203,6 +250,12 @@ class Teclado {
         return resultado
 
     }
+
+    /**
+     * Modifica el caracter pasado como parametro en base a las teclas activadas
+     * @param {String} texto caracter
+     * @returns {String} caracter modificado
+     */
     alterarNumero(texto) {
         let resultado = ""
         if (this.shift && !this.altgr /*&& !this.alt*/) {
@@ -219,6 +272,10 @@ class Teclado {
         return resultado
     }
 
+    /**
+     * activacio y desactivacion de teclas especial
+     * @param {String} texto e.code
+     */
     ejecutarTeclaEspecial(texto) {
         switch (texto) {
             case "Tab":
@@ -275,7 +332,9 @@ class Teclado {
     }
 
 
-
+    /**
+     * actualiza la pantalla con el nuevo texto y el estado de las teclas especiales
+     */
     actualizar() {
         document.getElementById("textoPantalla").innerHTML = this.texto
         document.getElementById("debugInfo").innerHTML = `
@@ -285,7 +344,7 @@ class Teclado {
             mayus=${this.mayuscula}`
         // + `<br>alt=${this.alt}`
         if (document.getElementById("visualizacionALternativaTecla").checked) {
-            this.alterarTeclado()
+            this.alterarTeclado() // altera tambien las teclas del teclado
         }
     }
 
@@ -304,9 +363,10 @@ class Teclado {
     }
 }
 
+//creacion del objeto
+keyboard = new Teclado();
 
-keyb = new Teclado();
-
+//animacion de cierre y apertura de la pantalla
 var cerrado = false
 document.getElementById("contenedorPantalla").addEventListener("click", function (e) {
     if (e.target.tagName == "INPUT") {
@@ -319,4 +379,5 @@ document.getElementById("contenedorPantalla").addEventListener("click", function
     }
     cerrado = !cerrado
 })
+//animacion del principio de la pantalla 
 setTimeout(function () { document.getElementById("contenedorPantalla").style.transform = `rotateX(${135}deg)` }, 100)
