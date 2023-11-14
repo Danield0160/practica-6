@@ -33,21 +33,20 @@ class Teclado {
             if (e.code == "F5") {
                 window.location.reload();
             }
-            if (!this.teclasPresionadas.has(e.key)) {
+            if (!this.teclasPresionadas.has(e.code)) {
                 this.teclear(e.code)
                 // Las teclas especiales que estan en [...] son las unicas que pueden repetir al mantener presionadas 
                 if (this.esTeclaEspecial(e.code) && !(["Space", "Tab", "Enter"].includes(e.code))) {
-                    this.teclasPresionadas.add(e.key)
+                    this.teclasPresionadas.add(e.code)
                 }
             }
         }.bind(this))
 
         document.addEventListener("keyup", function (e) {
-            this.teclasPresionadas.delete(e.key)
             e.preventDefault()
+            this.teclasPresionadas.delete(e.code)
 
             document.querySelector(`[code="${e.code}"]`).classList.remove("activado")
-            console.log(e.code)
 
             if (["ShiftRight","CapsLock"].includes(e.code)) {
                 return
