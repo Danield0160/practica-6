@@ -1,6 +1,6 @@
 @font-face {
     font-family: "publicpixel" ;
-    src: url(../PublicPixel-z84yD.ttf);
+    src: url(../font/PublicPixel-z84yD.ttf);
 }
 
 
@@ -58,7 +58,7 @@ body{
     backface-visibility: visible;
     transform: translate3d(0px,248px,136px);
     border: 3px solid black;
-    background-image: url(../Pear_Blue_Logo.png),linear-gradient(grey, rgb(189, 189, 189));;
+    background-image: url(../img/Pear_Blue_Logo.png),linear-gradient(grey, rgb(189, 189, 189));;
     background-repeat: no-repeat;
     background-position: center;
 }
